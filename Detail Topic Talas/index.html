@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TALAS by PukulEnam</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="left-section">
+            <div class="logo">
+                <img src="assets/Logo.png" alt="TALAS Logo">
+                <img src="assets/Title.png" class="title" style="width: 165px; height: 45px; margin-left: 5px;">
+            </div>
+            <div class="contact-us">
+                <a href="#"><img src="assets/instagram.png" alt="Instagram"></a>
+                <a href="#"><img src="assets/whatsapp.png" alt="WhatsApp"></a>
+                <a href="#"><img src="assets/facebook.png" alt="Facebook"></a>
+                <a href="#"><img src="assets/linkedin.png" alt="LinkedIn"></a>
+            </div>
+        </div>
+        <div class="right-section">
+            <input type="text" id="searchBar" placeholder="Search">
+            <span id="current-date"></span>
+        </div>
+        <script>
+            // Get the search bar element
+            var searchBar = document.getElementById('searchBar');
+
+            // Add an event listener for the click event
+            searchBar.addEventListener('click', function() {
+                // Change the placeholder text of the search bar
+                searchBar.placeholder = 'Start typing to search...';
+            });
+            searchBar.addEventListener('blur', function() {
+            // Change the placeholder text back to the default
+            searchBar.placeholder = 'Search...';
+            });
+        </script>
+    </header>
+    <main>
+        <aside>
+            <h2>Trending Topics</h2>
+            <ul id="topic-list">
+                <li><a href="#">US</a></li>
+                <li><a href="#">EURO 2024</a></li>
+                <li><a href="#">2024 Election</a></li>
+                <li><a href="#">World</a></li>
+                <li><a href="#">Health</a></li>
+            </ul>
+        </aside>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                function updateDate() {
+                    const dateSpan = document.getElementById('current-date');
+                    const now = new Date();
+                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    dateSpan.textContent = now.toLocaleDateString('id-ID', options);
+                }
+
+                updateDate();
+                
+                // Get all list items within the ul
+                var listItems = document.querySelectorAll('#topic-list li');
+
+                // Add click event listeners to each list item
+                listItems.forEach(function(item) {
+                    item.addEventListener('click', function() {
+                        // Remove the 'selected' class from all list items
+                        listItems.forEach(function(li) {
+                            li.classList.remove('selected');
+                        });
+
+                        // Add the 'selected' class to the clicked list item
+                        item.classList.add('selected');
+                    });
+                });
+            });
+        </script>
+        <section class="news">
+            <div class="news-item">
+                <div class="topic-content" id="topic-content">
+                    <h1><strong>News from EURO 2024</strong></h1>
+                    <p>Stay current with all the latest and breaking news about <b>EURO 2024</b>, compare headlines and perspectives between news sources on stories happening today. In total, <b>8,769</b> stories have been published about <b>EURO 2024</b> which Ground News has aggregated in the past 3 months.</p>
+                    <div class="radar-main">
+                        <div style="width: 400px; margin: auto;">
+                            <canvas id="radar"></canvas>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="news-item">
+                <div class="news-content">
+                    <a href="#" style="text-decoration: none; color: black;"><strong>Night owls have better brain function than morning people, study suggests</strong>
+                    <p>Night owls may be sharper than morning people, according to a new study, with those most active and alert in the evening performing better in cognitive tests.</p>
+                    </a>
+                </div>
+                <div class="radar-chart">
+                    <div style="width: 180px; margin: auto;">
+                        <canvas id="radarChart1"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="news-item">
+                <div class="news-content">
+                    <a href="#" style="text-decoration: none; color: black;"><strong>A three-legged lion and his brother made the longest recorded swim across a crocodile-infested river</strong>
+                    <p>A three-legged lion survived crocodile-infested waters in what scientists believe is the longest swim ever made by the animal - all to find a lioness.</p>
+                </a>
+                </div>
+                <div class="radar-chart">
+                    <div style="width: 180px; margin: auto;">
+                        <canvas id="radarChart2"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="news-item">
+                <div class="news-content">
+                    <a href="#" style="text-decoration: none; color: black;"><strong>Woman swept to sea while swimming at a Japanese beach is rescued 37 hours later and 50 miles away</strong>
+                    <p>A Chinese woman who was swept out to sea while swimming at a Japanese beach was rescued 37 hours later after drifting in an inflatable swim ring more than 80 kilometers (50 miles) in the Pacific Ocean, officials said Thursday.</p>
+                    </a>
+                </div>
+                <div class="radar-chart">
+                    <div style="width: 180px; margin: auto;">
+                        <canvas id="radarChart3"></canvas>
+                    </div>
+                </div>
+            </div>
+            <script>
+                let ctx = 
+                    document.getElementById('radar').getContext('2d');
+                let myRadarChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels:
+                            ['A', 'B',
+                            'C', 'D', 'E', 'F'],
+                        datasets: [{
+                            label: 'User A Skills',
+                            data: [25, 0, 0, 75],
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 9,
+                        },
+                        {
+                            label: 'User B Skills',
+                            data: [0, 45, 0, 0, 55],
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 9,
+                        },
+                        {
+                            label: 'User C Skills',
+                            data: [0, 0, 90, 0, 0, 10],
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(70, 130, 180, 1)',
+                            borderWidth: 9,
+                        }]
+                    },
+                    options: {
+                        
+                        scale: {
+                            pointLabels: {
+                                fontSize: 14,
+                            },
+                            r:{
+                                ticks: {
+                                    display: false,
+                                    stepSize: 20
+                                }
+                            }
+                        }
+                    }
+                });
+
+                function createRadarChart(chartId) {
+                    let koalisi = 65;
+                    let liberal = 59;
+                    let bias = 90;
+                    let oposisi = 100 - koalisi;
+                    let konservatif = 100 - liberal;
+                    let nonBias = 100 - bias;
+                    var radarData = {
+                        labels: ['Koalisi', 'Liberal', 'Bias', 'Oposisi', 'Konservatif', 'Non Bias'],
+                        datasets: [{
+                            data: [koalisi, liberal, bias, oposisi, konservatif, nonBias],
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                        }]
+                    };
+
+                    var radarOptions = {
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            r: {
+                                ticks: {
+                                    display: false,
+                                    stepSize: 20
+                                },
+                                pointLabels: {
+                                    display: true
+                                }
+                            }
+                        }
+                    };
+
+                    var ctx = document.getElementById(chartId).getContext('2d');
+                    var radarChart = new Chart(ctx, {
+                        type: 'radar',
+                        data: radarData,
+                        options: radarOptions
+                    });
+                }
+
+                createRadarChart('radarChart1');
+                createRadarChart('radarChart2');
+                createRadarChart('radarChart3');
+            </script>
+        </section>
+    </main>
+</body>
+</html>

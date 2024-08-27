@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TALAS by PukulEnam</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <div class="left-section">
+            <div class="logo">
+                <img src="assets/Logo.png" alt="TALAS Logo">
+                <img src="assets/Title.png" class="title" style="width: 165px; height: 45px; margin-left: 5px;">
+            </div>
+            <div class="contact-us">
+                <a href="https://www.instagram.com/pukulenam.id/"><img src="assets/instagram.png" alt="Instagram"></a>
+                <a href="https://www.whatsapp.com/channel/0029Vacza9qHgZWUh08zyw12"><img src="assets/whatsapp.png"
+                        alt="WhatsApp"></a>
+                <a href="https://www.facebook.com/pukulenam.id"><img src="assets/facebook.png" alt="Facebook"></a>
+                <a href="https://www.linkedin.com/company/pukulenam/"><img src="assets/linkedin.png" alt="LinkedIn"></a>
+            </div>
+        </div>
+        <div class="right-section">
+            <input type="text" id="search-bar" placeholder="Search">
+            <span id="current-date"></span>
+        </div>
+    </header>
+    <main>
+        <aside>
+            <h2>Trending Topics</h2>
+            <ul id="trending-topics">
+            </ul>
+        </aside>
+        <div class="content">
+            <section class="carousel-container">
+                <div class="carousel-slides">
+                    <!-- Slides will be dynamically added here -->
+                </div>
+                <button class="prev" id="prevBtn">&#10094;</button>
+                <button class="next" id="nextBtn">&#10095;</button>
+            </section>
+            <section class="news">
+                <!-- News items will be dynamically added here -->
+            </section>
+        </div>
+    </main>
+    <footer>
+        <div class="news"></div> <!-- This will hold the news items and radar charts -->
+        <p>&copy; PukulEnam 2024</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function updateDate() {
+                const dateSpan = document.getElementById('current-date');
+                const now = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                dateSpan.textContent = now.toLocaleDateString('id-ID', options);
+            }
+
+            updateDate();
+
+            let slideIndex = 0;
+            let allNews = [];
+
+            function showSlide(index) {
+                const slides = document.querySelectorAll('.carousel-slide');
+                if (index >= slides.length) {
+                    slideIndex = 0;
+                } else if (index < 0) {
+                    slideIndex = slides.length - 1;
+                } else {
+                    slideIndex = index;
+                }
+
+                const offset = -slideIndex * 100;
+                document.querySelector('.carousel-slides').style.transform = `translateX(${offset}%)`;
+            }
+
+            function moveSlide(step) {
+                const slides = document.querySelectorAll('.carousel-slide');
+                slideIndex = (slideIndex + step + slides.length) % slides.length;
+                showSlide(slideIndex);
+            }
+
+            function displayNews(newsItems) {
+                const newsSection = document.querySelector('.news');
+                newsSection.innerHTML = '';
+
+                newsItems.forEach((newsItem, index) => {
+                    const newsElement = document.createElement('div');
+                    newsElement.className = 'news-item';
+
+                    // Generate a unique ID for each radar chart and coverage bar
+                    const radarChartId = `radarChart-${index}`;
+                    const coverageBarId = `coverageBar-${index}`;
+                    const coverageBarId1 = `coverageBar-${index}`;
+                    const coverageBarId2 = `coverageBar-${index}`;
+
+                    newsElement.innerHTML = `
+                        <div class="news-image"> 
+                            <img src="${newsItem.avatar}" alt="News pic" style="width: 100%; height: 150px; margin-top: 5px">
+                        </div>
+                        <div class="news-content">
+                            <h2>${newsItem.name}</h2>
+                            <p>${newsItem.createdAt}</p>
+                            <a href="${newsItem.avatar}" target="_blank">Read more</a>
+                        </div>
+                        
+                        <div id="${coverageBarId}"></div> <!-- Coverage bar container -->
+                        <div id="${coverageBarId1}"></div>
+                        <div id="${coverageBarId2}"></div>
+                    `;
+
+                    newsSection.appendChild(newsElement);
+
+                    // Create the radar chart for each news item
+                    // createRadarChart(radarChartId);
+                    createCoverageBar(coverageBarId, 50, "Bias", "Non Bias");
+                    createCoverageBar(coverageBarId1, 40, "Pro", "Kontra");
+                    createCoverageBar(coverageBarId2, 70, "Pemerintah", "Oposisi");
+                });
+            }                                           
+
+            // function createRadarChart(chartId) {
+            //     const ctx = document.getElementById(chartId).getContext('2d');
+
+            //     let koalisi = 65;
+            //     let liberal = 59;
+            //     let bias = 90;
+            //     let oposisi = 100 - koalisi;
+            //     let konservatif = 100 - liberal;
+            //     let nonBias = 100 - bias;
+
+            //     var radarData = {
+            //         labels: ['Koalisi', 'Liberal', 'Bias', 'Oposisi', 'Konservatif', 'Non Bias'],
+            //         datasets: [{
+            //             data: [koalisi, liberal, bias, oposisi, konservatif, nonBias],
+            //             borderColor: [
+            //                 'rgba(255, 99, 132, 1)', // Koalisi
+            //                 'rgba(54, 162, 235, 1)', // Liberal
+            //                 'rgba(255, 206, 86, 1)', // Bias
+            //                 'rgba(255, 99, 132, 1)', // Oposisi
+            //                 'rgba(54, 162, 235, 1)', // Konservatif
+            //                 'rgba(255, 206, 86, 1)'  // Non Bias
+            //             ],
+            //             borderWidth: 2
+            //         }]
+            //     };
+
+            //     var radarOptions = {
+            //         plugins: {
+            //             legend: {
+            //                 display: false
+            //             }
+            //         },
+            //         scales: {
+            //             r: {
+            //                 ticks: {
+            //                     display: false,
+            //                     stepSize: 20
+            //                 },
+            //                 pointLabels: {
+            //                     display: true
+            //                 }
+            //             }
+            //         }
+            //     };
+
+            //     new Chart(ctx, {
+            //         type: 'radar',
+            //         data: radarData,
+            //         options: radarOptions
+            //     });
+            // }
+            function createCoverageBar(chartId, prediction, Cat1, Cat2) {
+                const container = document.getElementById(chartId);
+
+                // Create the coverage bar div
+                const coverageBar = document.createElement('div');
+                coverageBar.className = 'coverage-bar';
+
+                // Left segment
+                const leftSegment = document.createElement('div');
+                leftSegment.className = 'segment left-segment';
+                leftSegment.style.width = `${prediction}%`;
+                leftSegment.textContent = `${Cat1} ${prediction}%`;
+
+                // Center segment
+
+                // Right segment
+                const rightSegment = document.createElement('div');
+                rightSegment.className = 'segment right-segment';
+                const rightPercentage = 100 - prediction; // Calculate right percentage
+                rightSegment.style.width = `${rightPercentage}%`;
+                rightSegment.textContent = `${Cat2} ${rightPercentage}%`;
+
+                // Append segments to the coverage bar
+                coverageBar.appendChild(leftSegment);
+                coverageBar.appendChild(rightSegment);
+
+                // Append the coverage bar to the container
+                container.appendChild(coverageBar);
+            }
+
+            function displayCarousel(newsItems) {
+                const slidesContainer = document.querySelector('.carousel-slides');
+                slidesContainer.innerHTML = '';
+
+                newsItems.forEach(newsItem => {
+                    const slide = document.createElement('div');
+                    slide.className = 'carousel-slide';
+                    slide.innerHTML = `
+                        <img src="${newsItem.avatar}" alt="News Image">
+                        <div class="carousel-caption">
+                            <h2>${newsItem.name}</h2>
+                            <p>${newsItem.createdAt}</p>
+                            <a href="${newsItem.avatar}" target="_blank">Read more</a>
+                        </div>
+                    `;
+                    slidesContainer.appendChild(slide);
+                });
+
+                // Tampilkan slide pertama
+                showSlide(slideIndex);
+
+                // Auto Slide (Opsional)
+                setInterval(() => {
+                    moveSlide(1);
+                }, 5000); // Ganti slide setiap 5 detik
+            }
+
+            fetch('https://66960f4e0312447373c0df49.mockapi.io/api/v1/Test')
+                .then(response => response.json())
+                .then(data => {
+                    allNews = data;
+                    displayCarousel(allNews);
+                    displayNews(allNews);
+                })
+                .catch(error => console.error('Error fetching news:', error));
+
+            document.getElementById('search-bar').addEventListener('input', function (event) {
+                const query = event.target.value.toLowerCase();
+                const filteredNews = allNews.filter(newsItem =>
+                    newsItem.name.toLowerCase().includes(query) ||
+                    newsItem.createdAt.toLowerCase().includes(query)
+                );
+                displayNews(filteredNews);
+            });
+
+            fetch('http://127.0.0.1:5000/trending-topics')
+                .then(response => response.json())
+                .then(trendingTopics => {
+                    const trendingTopicsList = document.getElementById('trending-topics');
+                    trendingTopicsList.innerHTML = '';
+
+                    trendingTopics.forEach(topic => {
+                        const topicElement = document.createElement('li');
+                        topicElement.innerHTML = `<a href="${topic.url}" target="_blank">${topic.title}</a>`;
+                        trendingTopicsList.appendChild(topicElement);
+                    });
+                })
+                .catch(error => console.error('Error fetching trending topics:', error));
+
+            // Event listeners for the buttons
+            document.getElementById('prevBtn').addEventListener('click', () => moveSlide(-1));
+            document.getElementById('nextBtn').addEventListener('click', () => moveSlide(1));
+        });
+    </script>
+</body>
+
+</html>
